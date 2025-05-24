@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -5,11 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:mads_safebox/global/colors.dart';
-import 'package:mads_safebox/models/shared&file.dart';
+import 'package:mads_safebox/models/sharedplusfile.dart';
 import 'package:mads_safebox/services/sharefiles_service.dart';
-import 'package:mads_safebox/views/filePage.dart';
-import 'package:mads_safebox/views/uploadfiles.dart';
+import 'package:mads_safebox/views/filepage.dart';
 import 'package:mads_safebox/widgets/loading.dart';
 import 'package:mads_safebox/widgets/custom_appbar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,7 +20,6 @@ import '../models/shared.dart';
 import '../services/auth_service.dart';
 import '../services/file_service.dart';
 import '../widgets/custom_snack_bar.dart';
-import '../widgets/sharefilemodal.dart';
 
 class SharedFilesPage extends ConsumerStatefulWidget {
   const SharedFilesPage({super.key});
@@ -63,15 +62,21 @@ class _SharedFilesState extends ConsumerState<SharedFilesPage> {
       // directory = await getApplicationDocumentsDirectory();
       // print("directory: $directory");
       directory = await getDownloadsDirectory();
-      print("download directory: $directory");
+      if (kDebugMode) {
+        print("download directory: $directory");
+      }
       // directory = await getExternalStorageDirectory();
       // print("external directory: $directory");
 
       final userId = authService.getCurrentUser().id;
       final targetDirPath = "${directory!.path}/$userId/${fileSB.path.split("/").first}";
-      print("targetDirPath: $targetDirPath");
+      if (kDebugMode) {
+        print("targetDirPath: $targetDirPath");
+      }
       final fileFullPath = "$targetDirPath/${fileSB.path.split("/").last}";
-      print("fileFullPath: $fileFullPath");
+      if (kDebugMode) {
+        print("fileFullPath: $fileFullPath");
+      }
 
       await Directory(targetDirPath).create(recursive: true);
       final filePath = fileFullPath;
@@ -82,9 +87,7 @@ class _SharedFilesState extends ConsumerState<SharedFilesPage> {
         return;
       }
 
-      bool permissionGranted = await requestStoragePermission();
-
-      if (directory == null) throw Exception("Failed to get directory");
+      await requestStoragePermission();
 
       if(!downloadedFiles.containsKey(fileSB.name)){
         Uint8List? file = await fileService.getFile(fileSB.path);
@@ -92,7 +95,9 @@ class _SharedFilesState extends ConsumerState<SharedFilesPage> {
       }
 
       await file.writeAsBytes(downloadedFiles[fileSB.name]!);
-      print("File downloaded to: ${file.path}");
+      if (kDebugMode) {
+        print("File downloaded to: ${file.path}");
+      }
 
       if(notifications) {
         // Mostra notificação de download
@@ -116,7 +121,9 @@ class _SharedFilesState extends ConsumerState<SharedFilesPage> {
 
       notifications ? showCustomSnackBar(context, "File downloaded") : null;
     } catch (e) {
-      print("Error downloading file: $e");
+      if (kDebugMode) {
+        print("Error downloading file: $e");
+      }
       notifications ? showCustomSnackBar(context, "Error downloading file") : null;
     }
   }
@@ -222,7 +229,7 @@ class _SharedFilesState extends ConsumerState<SharedFilesPage> {
       future: getSharedFiles(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: Loading());
+          return const Center(child: Loading());
         } else if (snapshot.hasError) {
           return const Center(child: Text("Error loading files."));
         } else {
@@ -282,7 +289,9 @@ class _SharedFilesState extends ConsumerState<SharedFilesPage> {
                             Uint8List? file = await fileService
                                 .getSharedFile(snapshot.data![i].fileSB.path, snapshot.data![i].sharedSB.uid);
 
-                            print(snapshot.data![i].fileSB.path);
+                            if (kDebugMode) {
+                              print(snapshot.data![i].fileSB.path);
+                            }
 
                             if (context.mounted) {
                               Navigator.pop(context);
@@ -306,7 +315,7 @@ class _SharedFilesState extends ConsumerState<SharedFilesPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(
+                              const Expanded(
                                 flex: 1,
                                 child: Icon(Icons
                                     .image), //TODO : Colocar aqui a miniatura da imagem
@@ -322,9 +331,9 @@ class _SharedFilesState extends ConsumerState<SharedFilesPage> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
-                                      "Expire date: " + DateFormat('dd/MM/yyyy').format(
+                                      "Expire date: ${DateFormat('dd/MM/yyyy').format(
                                           DateTime.parse(snapshot
-                                              .data![i].sharedSB.expireDate.toString())),
+                                              .data![i].sharedSB.expireDate.toString()))}",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(

@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -8,7 +9,7 @@ import 'package:mads_safebox/models/file.dart';
 import 'package:mads_safebox/models/shared.dart';
 import 'package:mads_safebox/services/file_service.dart';
 import 'package:mads_safebox/services/sharefiles_service.dart';
-import 'package:mads_safebox/views/filePage.dart';
+import 'package:mads_safebox/views/filepage.dart';
 import 'package:mads_safebox/widgets/custom_snack_bar.dart';
 import 'package:mads_safebox/widgets/loading.dart';
 
@@ -34,7 +35,9 @@ class _OpenLinkModalState extends State<OpenLinkModal> {
 
 
   String decryptUrl(String encryptedBase64) {
-    print('Decrypting URL: $encryptedBase64');
+    if (kDebugMode) {
+      print('Decrypting URL: $encryptedBase64');
+    }
     final combinedKey = utf8.encode((dotenv.env['PUBLIC_KEY']! + dotenv.env['PRIVATE_KEY']!).padRight(32, '0')).sublist(0, 32);
     final key = encrypt.Key(combinedKey);
 
@@ -67,15 +70,19 @@ class _OpenLinkModalState extends State<OpenLinkModal> {
       final finalResolvedUrl = '$baseUrl/$decrypted';
 
       finalUrl = finalResolvedUrl;
-      print(decrypted);
+      if (kDebugMode) {
+        print(decrypted);
+      }
 
       int fileId = int.parse(decrypted.split('/').first);
       DateTime expireDate = DateTime.fromMillisecondsSinceEpoch(int.parse(decrypted.split('/').elementAt(1)));
       String role = decrypted.split('/').last;
 
-      print(fileId);
-      print(expireDate);
-      print(role);
+      if (kDebugMode) {
+        print(fileId);
+        print(expireDate);
+        print(role);
+      }
 
       SharedSB? response = await shareFilesService.getSharedFileFromLink(fileId, expireDate, role, password);
       if(response == null){
@@ -162,7 +169,7 @@ class _OpenLinkModalState extends State<OpenLinkModal> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                       ),
-                      child: Text('Open', style: TextStyle(color: mainTextColor)),
+                      child: const Text('Open', style: TextStyle(color: mainTextColor)),
                     ) : const Center(
                       child: Loading(),
                     ),
@@ -173,7 +180,7 @@ class _OpenLinkModalState extends State<OpenLinkModal> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                       ),
-                      child: Text('Close', style: TextStyle(color: mainTextColor)),
+                      child: const Text('Close', style: TextStyle(color: mainTextColor)),
                     ),
                   ],
                 ),

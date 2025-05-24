@@ -1,11 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mads_safebox/services/category_service.dart';
 import 'package:mads_safebox/widgets/loading.dart';
 
-import '../global/colors.dart';
 import '../models/category.dart';
 import '../services/file_service.dart';
 import 'category/category_create_modal.dart';
@@ -51,7 +52,9 @@ class _FileUploadSettingsModalState extends State<FileUploadSettingsModal> {
           Navigator.pop(context);
         }
       } catch (e) {
-        print("Error uploading file: $e");
+        if (kDebugMode) {
+          print("Error uploading file: $e");
+        }
         if (context.mounted) {
           showCustomSnackBar(context, "Error uploading file: $e");
         }
@@ -180,7 +183,7 @@ class _FileUploadSettingsModalState extends State<FileUploadSettingsModal> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 isUploading
-                    ? Loading()
+                    ? const Loading()
                     : ElevatedButton(
                         onPressed: () async {
                           await uploadFiles();

@@ -27,7 +27,7 @@ AppBar buildCustomAppBar(bool showBackOption) {
     leading: Padding(
       padding: const EdgeInsets.only(left: 12),
       child: PopupMenuButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.menu,
           color: mainTextColor,
         ),
@@ -67,7 +67,7 @@ List<PopupMenuEntry<dynamic>> buildWithoutBackOption(BuildContext context) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => UploadFilesPage(),
+                  builder: (context) => const UploadFilesPage(),
                 )
               );
             },

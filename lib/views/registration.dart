@@ -1,7 +1,9 @@
+
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:mads_safebox/global/colors.dart';
 import 'package:mads_safebox/services/auth_service.dart';
-import 'package:mads_safebox/views/login.dart';
 import 'package:mads_safebox/widgets/custom_snack_bar.dart';
 import 'package:mads_safebox/widgets/loading.dart';
 
@@ -56,7 +58,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           onTap: () {
             Navigator.pop(context);
           },
-          child: Center(
+          child: const Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
@@ -77,7 +79,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: mainTextColor),
+          icon: const Icon(Icons.arrow_back, color: mainTextColor),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -85,12 +87,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
       body: !loading ? SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 30),
-            Text(
+            const SizedBox(height: 30),
+            const Text(
               'Register',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: mainColor),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Form(
@@ -107,7 +109,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                       ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     TextFormField(
                       controller: emailController,
                       validator: (val) => validateEmail(email: val!.trim()),
@@ -118,7 +120,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                       ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     TextFormField(
                       controller: passwordController,
                       validator: (val) => val!.trim().length < 6 ? 'Password must have at least 6 characters' : null,
@@ -130,7 +132,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                       ),
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     ElevatedButton(
                       onPressed: () async {
                         if (!formkey.currentState!.validate()) {
@@ -141,7 +143,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         });
                         try {
                           await auth.signUp(emailController.text.trim(), passwordController.text.trim(), usernameController.text.trim());
-                        } on Exception catch (e) {
+                        } on Exception {
                           showCustomSnackBar(context, 'Error creating account');
                         }
                         loading = false;
@@ -150,9 +152,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: mainColor,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                        minimumSize: Size(double.infinity, 45),
+                        minimumSize: const Size(double.infinity, 45),
                       ),
-                      child: Text('Register', style: TextStyle(fontWeight: FontWeight.bold, color: mainTextColor)),
+                      child: const Text('Register', style: TextStyle(fontWeight: FontWeight.bold, color: mainTextColor)),
                     ),
                   ],
                 ),
@@ -161,7 +163,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ],
         ),
       )
-      : Center(
+      : const Center(
           child: Loading(),
         ),
     );

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../global/colors.dart';
@@ -14,7 +13,7 @@ void showCustomSnackBar(BuildContext context, String text) {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(
+        style: const TextStyle(
           color: mainTextColor,
           fontSize: 16.0,
         ),

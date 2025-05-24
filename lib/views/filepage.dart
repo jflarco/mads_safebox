@@ -1,3 +1,6 @@
+
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -15,7 +18,6 @@ import '../global/colors.dart';
 import '../services/file_service.dart';
 import '../widgets/custom_appbar.dart';
 import '../models/file.dart';
-import '../widgets/openlinkmodal.dart';
 import '../widgets/sharefilemodal.dart';
 
 class FilePage extends StatefulWidget {
@@ -24,7 +26,7 @@ class FilePage extends StatefulWidget {
 
   ///tou a passar o fileSB porque pode ser preciso para fazer a partilha (remover se nao for)
   final Uint8List file;
-  FilePage({super.key, required this.fileSB, required this.file, this.sharedSB} );
+  const FilePage({super.key, required this.fileSB, required this.file, this.sharedSB} );
 
   @override
   State<FilePage> createState() => _FilePageState();
@@ -51,15 +53,21 @@ class _FilePageState extends State<FilePage> {
       // directory = await getApplicationDocumentsDirectory();
       // print("directory: $directory");
       directory = await getDownloadsDirectory();
-      print("download directory: $directory");
+      if (kDebugMode) {
+        print("download directory: $directory");
+      }
       // directory = await getExternalStorageDirectory();
       // print("external directory: $directory");
 
       final userId = authService.getCurrentUser().id;
       final targetDirPath = "${directory!.path}/$userId/${widget.fileSB.path.split("/").first}";
-      print("targetDirPath: $targetDirPath");
+      if (kDebugMode) {
+        print("targetDirPath: $targetDirPath");
+      }
       final fileFullPath = "$targetDirPath/${widget.fileSB.path.split("/").last}";
-      print("fileFullPath: $fileFullPath");
+      if (kDebugMode) {
+        print("fileFullPath: $fileFullPath");
+      }
 
       await Directory(targetDirPath).create(recursive: true);
       final filePath = fileFullPath;
@@ -70,13 +78,13 @@ class _FilePageState extends State<FilePage> {
         return;
       }
 
-      bool permissionGranted = await requestStoragePermission();
-
-      if (directory == null) throw Exception("Failed to get directory");
+      await requestStoragePermission();
 
       await file.writeAsBytes(widget.file);
       await MediaScanner.loadMedia(path: file.path);
-      print("File downloaded to: ${file.path}");
+      if (kDebugMode) {
+        print("File downloaded to: ${file.path}");
+      }
 
       if(await Permission.notification.request().isGranted) {
         // Mostra notificação de download
@@ -100,7 +108,9 @@ class _FilePageState extends State<FilePage> {
 
       showCustomSnackBar(context, "File downloaded");
     } catch (e) {
-      print("Error downloading file: $e");
+      if (kDebugMode) {
+        print("Error downloading file: $e");
+      }
       showCustomSnackBar(context, "Error downloading file");
     }
   }
@@ -142,16 +152,16 @@ class _FilePageState extends State<FilePage> {
           children: [
             Row(
               children: [
-                Container(
+                SizedBox(
                   width: 40,
                   child: IconButton(
                       onPressed: () async {
                         await downloadFile();
                       },
-                      icon: Icon(Icons.download, color: mainColor)
+                      icon: const Icon(Icons.download, color: mainColor)
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -160,7 +170,7 @@ class _FilePageState extends State<FilePage> {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: 40,
                   child: IconButton(
                     onPressed: (){
@@ -171,7 +181,7 @@ class _FilePageState extends State<FilePage> {
                         }
                       );
                     },
-                    icon: Icon(Icons.share, color: mainColor)
+                    icon: const Icon(Icons.share, color: mainColor)
                   ),
                 )
               ],

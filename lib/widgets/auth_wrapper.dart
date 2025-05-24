@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mads_safebox/widgets/loading.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/user.dart';
-import '../riverpod/loggeduserprovider.dart';
 import '../services/auth_service.dart';
 import '../views/home.dart';
 import '../views/login.dart';
@@ -35,9 +32,9 @@ class _AuthWrapperState extends ConsumerState<AuthWrapper> {
           final session = snapshot.hasData ? snapshot.data!.session : null;
 
           if (session == null) {
-            return LoginPage();
+            return const LoginPage();
           } else {
-            return HomePage();
+            return const HomePage();
           }
         }
       ),

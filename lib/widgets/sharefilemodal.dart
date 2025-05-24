@@ -1,14 +1,12 @@
 import 'dart:convert';
 import 'package:share_plus/share_plus.dart';
 import 'package:encrypt/encrypt.dart'  as encrypt;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:mads_safebox/models/file.dart';
 import 'package:mads_safebox/services/sharefiles_service.dart';
-import 'package:mads_safebox/widgets/custom_snack_bar.dart';
 
 import '../global/colors.dart';
 
@@ -22,7 +20,7 @@ class FileShareModal extends StatefulWidget {
 
 class _FileShareModalState extends State<FileShareModal> {
 
-  DateTime expiringDate = DateTime.now().add(Duration(days: 1));
+  DateTime expiringDate = DateTime.now().add(const Duration(days: 1));
   bool noExpiration = false;
   TextEditingController passwordController = TextEditingController();
   String url = '';
@@ -48,7 +46,7 @@ class _FileShareModalState extends State<FileShareModal> {
 
   void shareFile() async {
     setState(() {
-      url = 'https://safebox.com/' + encryptUrl('${widget.fileSB.id}/${expiringDate.millisecondsSinceEpoch}/${selectedCategory.toLowerCase()}');
+      url = 'https://safebox.com/${encryptUrl('${widget.fileSB.id}/${expiringDate.millisecondsSinceEpoch}/${selectedCategory.toLowerCase()}')}';
     });
     ShareFilesService shareFilesService = ShareFilesService();
     await shareFilesService.shareFile(widget.fileSB.id, widget.fileSB.path, expiringDate, selectedCategory, url, passwordController.text.trim());
@@ -79,9 +77,9 @@ class _FileShareModalState extends State<FileShareModal> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "File Name",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
 
@@ -171,7 +169,7 @@ class _FileShareModalState extends State<FileShareModal> {
                       if (noExpiration) {
                         expiringDate = DateTime(2200);
                       } else {
-                        expiringDate = DateTime.now().add(Duration(days: 1));
+                        expiringDate = DateTime.now().add(const Duration(days: 1));
                       }
                       url = '';
                     });
@@ -207,7 +205,7 @@ class _FileShareModalState extends State<FileShareModal> {
                     child: Text(
                       url,
                       maxLines: 2,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: mainColor,
                         decoration: TextDecoration.underline,
@@ -224,7 +222,7 @@ class _FileShareModalState extends State<FileShareModal> {
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Share',
                     style: TextStyle(color: mainTextColor, fontSize: 16),
                   ),

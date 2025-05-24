@@ -52,6 +52,8 @@ dependencies:
   media_scanner: ^2.2.0
   flutter_local_notifications: ^19.2.1
   open_file: ^3.5.10
+  flutter_launcher_icons: ^0.14.3
+
 
 dev_dependencies:
   flutter_test:

@@ -1,19 +1,23 @@
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:mads_safebox/models/file.dart';
 import 'package:mads_safebox/models/shared.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/shared&file.dart';
+import '../models/sharedplusfile.dart';
 
 class ShareFilesService {
 
   Future<void> shareFile(int fileId, String filePath, DateTime expireDate, String role, String url, String password) async {
     if(expireDate.isBefore(DateTime.now())) {
-      print('Error: Expiration date must be in the future.');
+      if (kDebugMode) {
+        print('Error: Expiration date must be in the future.');
+      }
       return;
     }
     if(role != 'View' && role != 'Edit') {
-      print('Error: Role must be either "View" or "Edit".');
+      if (kDebugMode) {
+        print('Error: Role must be either "View" or "Edit".');
+      }
       return;
     }
     var expireDateToSupabase = DateFormat('yyyy-MM-dd').format(expireDate);
@@ -31,13 +35,17 @@ class ShareFilesService {
             'password': password,
           });
     } catch (e) {
-      print('Error sharing file: $e');
+      if (kDebugMode) {
+        print('Error sharing file: $e');
+      }
     }
   }
 
   Future<SharedSB?> getSharedFileFromLink(int fileId, DateTime date, String role, String password) async {
     if(date.isBefore(DateTime.now())) {
-      print('Error: Autorization expired.');
+      if (kDebugMode) {
+        print('Error: Autorization expired.');
+      }
       throw Exception('Autorization expired');
     }
     role = role.substring(0,1).toUpperCase() + role.substring(1).toLowerCase();
@@ -52,8 +60,10 @@ class ShareFilesService {
       final List<SharedSB> sharedList = (response)
           .map((item) => SharedSB.fromJson(item))
           .toList();
-      print(sharedList);
-      if(sharedList.length < 1){
+      if (kDebugMode) {
+        print(sharedList);
+      }
+      if(sharedList.isEmpty){
         return null;
       }
       SharedSB sharedSB = sharedList.first;
@@ -70,7 +80,9 @@ class ShareFilesService {
 
 
     } catch (e) {
-      print('Error fetching shared files: $e');
+      if (kDebugMode) {
+        print('Error fetching shared files: $e');
+      }
       return null;
     }
   }
@@ -97,7 +109,9 @@ class ShareFilesService {
 
       return sharedFiles;
     } catch (e) {
-      print('Error fetching shared files: $e');
+      if (kDebugMode) {
+        print('Error fetching shared files: $e');
+      }
       throw Exception('Error fetching shared files');
     }
   }

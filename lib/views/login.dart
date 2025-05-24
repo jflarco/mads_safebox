@@ -1,3 +1,7 @@
+
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,8 +10,8 @@ import 'package:mads_safebox/views/registration.dart';
 import 'package:mads_safebox/widgets/custom_snack_bar.dart';
 import 'package:mads_safebox/widgets/loading.dart';
 
-import '../models/user.dart';
-import '../riverpod/loggeduserprovider.dart';
+// import '../models/user.dart';
+// import '../riverpod/loggeduserprovider.dart';
 import '../services/auth_service.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -36,13 +40,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
+    // final user = ref.watch(userProvider);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
         backgroundColor: mainColor,
         centerTitle: true,
-        title: Center(
+        title: const Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -64,12 +68,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       body: !loading ? SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 30),
-            Text(
+            const SizedBox(height: 30),
+            const Text(
               'Login',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: Color(0xFF003366)),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Form(
@@ -86,7 +90,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                       ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     TextFormField(
                       controller: passwordController,
                       validator: (val) => val!.isEmpty ? 'Insert a password' : null,
@@ -109,7 +113,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
@@ -124,10 +128,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           }
                           passwordController.text = oldpass;//retorna a password antiga
                         },
-                        child: Text('Forgot your password', style: TextStyle(color: Color(0xFF003366))),
+                        child: const Text('Forgot your password', style: TextStyle(color: Color(0xFF003366))),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () async {
                         if (!formkey.currentState!.validate()) {
@@ -138,9 +142,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         });
 
                         try {
-                          UserSB user = await auth.signInWithEmail(emailController.text.trim(), passwordController.text.trim());
+                          await auth.signInWithEmail(emailController.text.trim(), passwordController.text.trim());
                           //ref.read(userProvider.notifier).state = user;
-                        } on Exception catch (e) {
+                        } on Exception {
                           showCustomSnackBar(context, 'Invalid credentials');
                         }
                         setState(() {
@@ -151,18 +155,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: mainColor,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                        minimumSize: Size(double.infinity, 45),
+                        minimumSize: const Size(double.infinity, 45),
                       ),
-                      child: Text('Login', style: TextStyle(color: mainTextColor),),
+                      child: const Text('Login', style: TextStyle(color: mainTextColor),),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       children: <Widget>[
                         Expanded(
                           child: Divider(thickness: 1, color: Colors.grey.shade300),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Text("Or Login with", style: TextStyle(color: Colors.grey)),
                         ),
                         Expanded(
@@ -170,7 +174,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -184,7 +188,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               await auth.nativeGoogleSignIn();
                               // ref.read(userProvider.notifier).state = user;
                             } on Exception catch (e) {
-                              print("Error: " + e.toString());
+                              if (kDebugMode) {
+                                print("Error: $e");
+                              }
                               showCustomSnackBar(context, 'Error signing in with Google');
                               setState(() {
                                 loading = false;
@@ -196,10 +202,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           },
                           style: ElevatedButton.styleFrom(
                           backgroundColor: mainColor,
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(16),
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(16),
                           ),
-                          child: Icon(FontAwesomeIcons.google, color: mainTextColor),
+                          child: const Icon(FontAwesomeIcons.google, color: mainTextColor),
                         ),
                         ElevatedButton(
                           onPressed: () async {
@@ -211,7 +217,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               await auth.signInWithFacebook();
                               // ref.read(userProvider.notifier).state = user;
                             } on Exception catch (e) {
-                              print("Error: " + e.toString());
+                              if (kDebugMode) {
+                                print("Error: $e");
+                              }
                               showCustomSnackBar(context, 'Error signing in with Facebook');
                               setState(() {
                                 loading = false;
@@ -223,18 +231,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: mainColor,
-                            shape: CircleBorder(),
-                            padding: EdgeInsets.all(16),
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(16),
                           ),
-                          child: Icon(FontAwesomeIcons.facebookF, color: mainTextColor),
+                          child: const Icon(FontAwesomeIcons.facebookF, color: mainTextColor),
                         ),
                       ],
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("You don’t have an account? "),
+                        const Text("You don’t have an account? "),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -242,7 +250,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 MaterialPageRoute(builder: (context) => const RegistrationPage()),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             "Register",
                             style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),
                           ),
@@ -256,7 +264,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           ],
         ),
       )
-      : Center(
+      : const Center(
         child: Loading(),
       ),
     );

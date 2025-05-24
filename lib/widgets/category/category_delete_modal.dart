@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:mads_safebox/global/default_category.dart';
 import 'package:mads_safebox/services/file_service.dart';

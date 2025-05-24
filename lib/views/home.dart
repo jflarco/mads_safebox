@@ -1,3 +1,6 @@
+
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -7,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mads_safebox/global/colors.dart';
 import 'package:mads_safebox/global/default_category.dart';
 import 'package:mads_safebox/services/category_service.dart';
-import 'package:mads_safebox/views/filePage.dart';
+import 'package:mads_safebox/views/filepage.dart';
 import 'package:mads_safebox/views/sharedfilespage.dart';
 import 'package:mads_safebox/views/uploadfiles.dart';
 import 'package:mads_safebox/widgets/category/category_create_modal.dart';
@@ -64,15 +67,21 @@ class _HomePageState extends ConsumerState<HomePage> {
       // directory = await getApplicationDocumentsDirectory();
       // print("directory: $directory");
       directory = await getDownloadsDirectory();
-      print("download directory: $directory");
+      if (kDebugMode) {
+        print("download directory: $directory");
+      }
       // directory = await getExternalStorageDirectory();
       // print("external directory: $directory");
 
       final userId = authService.getCurrentUser().id;
       final targetDirPath = "${directory!.path}/$userId/${fileSB.path.split("/").first}";
-      print("targetDirPath: $targetDirPath");
+      if (kDebugMode) {
+        print("targetDirPath: $targetDirPath");
+      }
       final fileFullPath = "$targetDirPath/${fileSB.path.split("/").last}";
-      print("fileFullPath: $fileFullPath");
+      if (kDebugMode) {
+        print("fileFullPath: $fileFullPath");
+      }
 
       await Directory(targetDirPath).create(recursive: true);
       final filePath = fileFullPath;
@@ -83,9 +92,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         return;
       }
 
-      bool permissionGranted = await requestStoragePermission();
-
-      if (directory == null) throw Exception("Failed to get directory");
+      await requestStoragePermission();
 
       if(!downloadedFiles.containsKey(fileSB.name)){
         Uint8List? file = await fileService.getFile(fileSB.path);
@@ -93,7 +100,9 @@ class _HomePageState extends ConsumerState<HomePage> {
       }
 
       await file.writeAsBytes(downloadedFiles[fileSB.name]!);
-      print("File downloaded to: ${file.path}");
+      if (kDebugMode) {
+        print("File downloaded to: ${file.path}");
+      }
 
       if(notifications) {
         // Mostra notificação de download
@@ -117,7 +126,9 @@ class _HomePageState extends ConsumerState<HomePage> {
 
       notifications ? showCustomSnackBar(context, "File downloaded") : null;
     } catch (e) {
-      print("Error downloading file: $e");
+      if (kDebugMode) {
+        print("Error downloading file: $e");
+      }
       notifications ? showCustomSnackBar(context, "Error downloading file") : null;
     }
   }
@@ -327,7 +338,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
               ),
-              child: Text(
+              child: const Text(
                 "View Shared Files",
                 style: TextStyle(color: mainTextColor),
               ),
@@ -422,12 +433,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     List<ListTile> tiles = [];
 
     for (int i = 0; i < files.length; i++) {
-      if (selectedCategory != null) {
-        if (selectedCategory!.id != files[i].categoryId) {
-          continue;
-        }
+      if (selectedCategory.id != files[i].categoryId) {
+        continue;
       }
-
+    
       tiles.add(ListTile(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -472,7 +481,9 @@ class _HomePageState extends ConsumerState<HomePage> {
 
                   Uint8List? file = await fileService.getFile(files[i].path);
 
-                  print(files[i].path);
+                  if (kDebugMode) {
+                    print(files[i].path);
+                  }
 
                   if (context.mounted) {
                     Navigator.pop(context);

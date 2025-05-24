@@ -7,8 +7,6 @@ import 'package:mads_safebox/widgets/fileuploadsettingsmodal.dart';
 
 import '../services/file_service.dart';
 import '../widgets/custom_snack_bar.dart';
-import '../widgets/logoutbutton.dart';
-import '../widgets/openlinkmodal.dart';
 
 
 
@@ -85,15 +83,15 @@ class _UploadFilesPageState extends State<UploadFilesPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
-            Text("Upload", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const Text("Upload", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             Divider(thickness: 1, color: Colors.grey.shade300),
             const SizedBox(height: 8),
             Expanded(
               child: selectedFiles.isEmpty
-                  ? Center(
+                  ? const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Icon(Icons.insert_drive_file, size: 80, color: Colors.grey),
                     SizedBox(height: 8),
                     Text("Nenhum ficheiro selecionado"),
